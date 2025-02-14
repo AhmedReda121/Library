@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Library
 {
-    // abstract class Person (only used for inheritance)
+    // abstract class Person (base class for LibraryManager and User)
     abstract class Person
     {
         public string Name { get; set; }
@@ -49,6 +49,20 @@ namespace Library
             {
                 books.Remove(book);
                 Console.WriteLine($"Book removed: {book.Title} by {book.Author}");
+            }
+            else
+            {
+                Console.WriteLine("Book not found!");
+            }
+        }
+
+        public void BuyBook(string title)
+        {
+            Book? book = books.Find(b => b.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+            if (book != null)
+            {
+                books.Remove(book);
+                Console.WriteLine($"Book purchased: {book.Title} by {book.Author}");
             }
             else
             {
@@ -123,7 +137,7 @@ namespace Library
                 string phone = Console.ReadLine();
 
                 LibraryManager manager = new LibraryManager(name, age, phone, lib);
-                Console.WriteLine($"\nLogged in as Library Manager: {manager.Name}, Age: {manager.Age}, Phone: {manager.PhoneNumber}");
+                Console.WriteLine($"\nLogged in as Library Manager: {manager.Name}");
 
                 bool exit = false;
                 while (!exit)
@@ -178,12 +192,12 @@ namespace Library
                 string card = Console.ReadLine();
 
                 User user = new User(name, age, phone, card);
-                Console.WriteLine($"\nLogged in as User: {user.Name}, Age: {user.Age}, Phone: {user.PhoneNumber}, Library Card: {user.LibraryCard}");
+                Console.WriteLine($"\nLogged in as User: {user.Name}");
 
                 bool exit = false;
                 while (!exit)
                 {
-                    Console.WriteLine("\nAvailable commands: show, exit");
+                    Console.WriteLine("\nAvailable commands: show, buy, exit");
                     Console.Write("Enter command: ");
                     string command = Console.ReadLine().ToLower();
 
@@ -191,6 +205,11 @@ namespace Library
                     {
                         case "show":
                             lib.ShowBooks();
+                            break;
+                        case "buy":
+                            Console.Write("Enter book title to buy: ");
+                            string buyTitle = Console.ReadLine();
+                            lib.BuyBook(buyTitle);
                             break;
                         case "exit":
                             exit = true;
@@ -207,6 +226,7 @@ namespace Library
             }
 
             Console.WriteLine("\nThank you for using the Library System. Press any key to exit...");
+            Console.ReadKey();
         }
     }
 }
